@@ -1,0 +1,15 @@
+{
+  "name": "@repo/zod-schemas",
+  "version": "1.0.0",
+  "description": "Zod Schemas",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.0.10"
+  }
+}
