@@ -1,0 +1,12 @@
+{
+  "name": "@repo/http-status",
+  "version": "1.0.0",
+  "description": "A utility package providing custom HTTP status codes and descriptive error messages for managing access and refresh token validation in authentication flows",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
