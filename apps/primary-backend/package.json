@@ -13,6 +13,7 @@
     "@repo/db": "*",
     "@repo/http-status": "*",
     "@repo/zod-schemas": "*",
+    "@repo/mailer-config": "*",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.2",
