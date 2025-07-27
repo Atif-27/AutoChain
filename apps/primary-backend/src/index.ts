@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import userRouter from "./router/user.routes"
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;

@@ -11,9 +11,15 @@
   "description": "",
   "dependencies": {
     "@repo/db": "*",
+    "@repo/http-status": "*",
+    "@repo/zod-schemas": "*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.1"
+    "dotenv": "^17.2.1",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
