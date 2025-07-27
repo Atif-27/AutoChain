@@ -13,61 +13,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String  @id @default(uuid())
+  name         String
+  email        String
+  password     String
+  zaps         Zap[]
+  otp          Int?
+  verify       Boolean @default(false)
+  refreshToken String?
 
-model User{
-  id Int @id @default(autoincrement()) 
-  name String
-  email String 
-  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
-model Zap{
+model Zap {
   id String @id @default(uuid())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
   triggerId String
-  trigger Trigger?
+  trigger   Trigger?
+
   action Action[]
+
   zapRuns ZapRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
-model ZapRun{
-  id String @id @default(uuid())
+model ZapRun {
+  id    String @id @default(uuid())
+  metadata     Json          @default("{}")
+
   zapId String
-  metadata Json
-  zap Zap @relation(fields: [zapId], references: [id])
+  zap          Zap           @relation(fields: [zapId], references: [id])
+
   zapRunOutBox ZapRunOutBox?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
-model ZapRunOutBox{
-  id String @id @default(uuid())
+model ZapRunOutBox {
+  id       String @id @default(uuid())
   zapRunId String @unique
-  zapRun ZapRun @relation(fields: [zapRunId], references: [id])
+  zapRun   ZapRun @relation(fields: [zapRunId], references: [id])
 }
-model Trigger{
-  id String @id @default(uuid())
-  zapId String  @unique
-  zap Zap @relation(fields: [zapId],references: [id])
+
+model Trigger {
+  id        String            @id @default(uuid())
+
+  zapId     String            @unique
+  zap       Zap               @relation(fields: [zapId], references: [id])
+
   triggerId String
-  type AvailableTriggers @relation(fields: [triggerId], references: [id]) 
+  type      AvailableTriggers @relation(fields: [triggerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
+model Action {
+  id           String           @id @default(uuid())
 
-model Action{
-  id String @id @default(uuid())
-  zapId String
-  zap Zap @relation(fields: [zapId], references: [id])
-  actionId String 
-  type AvailableActions @relation(fields: [actionId], references: [id])
-  sortingOrder Int @default(0)
+  zapId        String
+  zap          Zap              @relation(fields: [zapId], references: [id])
+
+  actionId     String
+  type         AvailableActions @relation(fields: [actionId], references: [id])
+
+  sortingOrder Int              @default(0)
+
+    createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
-model AvailableActions{
-  id String @id @default(uuid())
-  name String
+model AvailableActions {
+  id      String   @id @default(uuid())
+  name    String
+   image    String?
   actions Action[]
 }
 
-model AvailableTriggers{
-  id String @id @default(uuid())
-  name String
+model AvailableTriggers {
+  id       String    @id @default(uuid())
+  name     String
+   image    String?
   triggers Trigger[]
 }
