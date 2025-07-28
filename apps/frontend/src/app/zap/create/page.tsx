@@ -43,7 +43,7 @@ const CreateNewZap = () => {
         availableTriggerId: nodes[0].data.triggerId,
         actions: nodes.slice(1).map((action, index) => {
           if (!action.data.actionId || !action.data.metadata) {
-            throw new Error(`Action Number ${index + 1}: detail Missing`);
+            // throw new Error(`Action Number ${index + 1}: detail Missing`);
           }
           return {
             availableActionId: action.data.actionId,
@@ -53,6 +53,7 @@ const CreateNewZap = () => {
           };
         }),
       };
+
       console.log(body);
 
       await axiosInstance.post("/api/v1/zap", body);

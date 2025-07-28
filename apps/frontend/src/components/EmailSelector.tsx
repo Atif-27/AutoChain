@@ -5,26 +5,41 @@ import { type EmailSelector, emailSelectorSchema } from "@repo/zod-schemas";
 
 import { Button } from "@/component/ui/button";
 import { SheetClose } from "@/component/ui/sheet";
-import { useNodeId, useReactFlow } from "@xyflow/react";
+import { useNodeId, useNodesData, useReactFlow } from "@xyflow/react";
 import { z } from "zod";
 import { Input } from "@/component/ui/input";
+import { Action } from "./ReactFlow/ActionNode";
 
-const EmailSelector = () => {
+const EmailSelector = ({ closeSheet }: { closeSheet: () => void }) => {
   const nodeId = useNodeId();
+  const actionNode = useNodesData<Action>(nodeId as string);
   const { updateNodeData } = useReactFlow();
+
+  const initialValues: EmailSelector = (() => {
+    try {
+      const parsed = JSON.parse(actionNode?.data?.metadata ?? "{}");
+      return {
+        email: parsed.email ?? "",
+        body: parsed.body ?? "",
+      };
+    } catch {
+      return {
+        email: "",
+        body: "",
+      };
+    }
+  })();
 
   const form = useForm<EmailSelector>({
     resolver: zodResolver(emailSelectorSchema),
-    defaultValues: {
-      email: "",
-      body: "",
-    },
+    defaultValues: initialValues,
   });
 
   function onSubmit(values: z.infer<typeof emailSelectorSchema>) {
     updateNodeData(nodeId as string, {
       metadata: JSON.stringify(values),
     });
+    closeSheet();
   }
 
   return (
@@ -55,11 +70,9 @@ const EmailSelector = () => {
             )}
           />
         </div>
-        <SheetClose asChild>
-          <Button type="submit" className="w-full">
-            Continue
-          </Button>
-        </SheetClose>
+        <Button type="submit" className="w-full">
+          Continue
+        </Button>
       </form>
     </Form>
   );

@@ -10,6 +10,9 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
+    headers: {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMzQ0YmJiLWQ0NzctNDBhYy1iN2VlLTBjZTllYzdlNjk4NCIsIm5hbWUiOiJKb2huIERvZSIsImVtYWlsIjoiSm9obiBEb2UiLCJpYXQiOjE3NTM2OTMwNDQsImV4cCI6MTc1Mzg2NTg0NH0.gT9n0UPTcsFRRFG8wnjQXEnFSJO3wV6674edQVnx3c8"
+    },
     withCredentials: true,
 });
 
