@@ -6,8 +6,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
-import { Label } from "./ui/label";
+} from "@/component/ui/sheet";
+import { Label } from "@/component/ui/label";
 
 import { Action } from "./ReactFlow/ActionNode";
 // import EmailSelector from "./EmailSelector";

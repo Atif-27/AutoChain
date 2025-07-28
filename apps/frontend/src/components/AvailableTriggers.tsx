@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { DialogClose } from "./ui/dialog";
+import { Button } from "@/component/ui/button";
+import { DialogClose } from "@/component/ui/dialog";
 import { useNodeId, useReactFlow } from "@xyflow/react";
 import axiosInstance from "@/utils/axiosInstance";
 import Image from "next/image";

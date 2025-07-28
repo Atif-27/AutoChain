@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/component/ui/button";
 import { useNodeId, useReactFlow } from "@xyflow/react";
-import { DialogClose } from "./ui/dialog";
+import { DialogClose } from "@/component/ui/dialog";
 import { AvailableAction } from "@repo/zod-schemas";
 import axiosInstance from "@/utils/axiosInstance";
 import Image from "next/image";

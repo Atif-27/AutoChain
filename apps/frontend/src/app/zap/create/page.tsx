@@ -41,11 +41,19 @@ const CreateNewZap = () => {
     try {
       const body = {
         availableTriggerId: nodes[0].data.triggerId,
-        actions: nodes.slice(1).map((action) => ({
-          availableActionId: action.data.actionId,
-          actionMetadata: JSON.parse((action.data.metadata as string) || "{}"),
-        })),
+        actions: nodes.slice(1).map((action, index) => {
+          if (!action.data.actionId || !action.data.metadata) {
+            throw new Error(`Action Number ${index + 1}: detail Missing`);
+          }
+          return {
+            availableActionId: action.data.actionId,
+            actionMetadata: JSON.parse(
+              (action.data.metadata as string) || "{}"
+            ),
+          };
+        }),
       };
+      console.log(body);
 
       await axiosInstance.post("/api/v1/zap", body);
 

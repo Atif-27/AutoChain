@@ -1,5 +1,5 @@
 import { Label } from "@radix-ui/react-label";
-import { Button } from "../ui/button";
+import { Button } from "@/component/ui/button";
 
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
 import Image from "next/image";
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "@/component/ui/dialog";
 import AvailableTriggers from "../AvailableTriggers";
 // import AvailableTriggers from "../AvailableTriggers";
 
