@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./router/user.routes";
 import { ZapRouter } from "./router/zap.routes";
+import { actionRouter } from "./router/action.routes";
+import { triggerRouter } from "./router/trigger.routes";
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -27,6 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/zap", ZapRouter);
+app.use("/api/v1/trigger", triggerRouter);
+app.use("/api/v1/action", actionRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`);
