@@ -24,9 +24,7 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
             }
         });
     });
-    // store in db a new trigger
 
-    // push it into kafka/redis
 
     res.json({
         message: "WEBHOOK run successfully"
