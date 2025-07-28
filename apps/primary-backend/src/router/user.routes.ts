@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.midleware";
 
-import "dotenv/config";
 import {
   generateForgotPasswordOTP,
   generateOtp,
