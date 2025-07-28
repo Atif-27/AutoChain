@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/node": "^24.1.0",
     "dotenv": "^17.2.1",
+    "nodemailer": "^7.0.5",
     "resend": "^4.7.0"
   },
   "exports": {
@@ -14,5 +15,8 @@
   },
   "scripts": {
     "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.17"
   }
 }

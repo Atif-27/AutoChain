@@ -1,13 +1,22 @@
-import { Resend } from 'resend';
-import { generateOtpTemplate } from "./template/otp-template";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { generateOtpTemplate } from "./template/otp-template";
 import { generateNormalEmailTemplate } from "./template/normal-email-template";
 
 dotenv.config();
-if (!process.env.RESEND_API_KEY) {
-    throw new Error("❌ RESEND_API_KEY is missing in environment variables.");
+
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error("❌ EMAIL_USER or EMAIL_PASS is missing in environment variables.");
 }
-const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+
+// Create Nodemailer transporter
+const transporter = nodemailer.createTransport({
+    service: "gmail", // or 'hotmail', 'yahoo', etc., depending on your email
+    auth: {
+        user: process.env.EMAIL_USER, // your email address
+        pass: process.env.EMAIL_PASS, // your app password
+    },
+});
 
 async function sendEmail(
     to: string,
@@ -15,20 +24,21 @@ async function sendEmail(
     type: "otp" | "normal",
 ) {
     try {
-        const data = await resend.emails.send({
-            from: `Atif <onboarding@resend.dev>`,
-            to: [to],
+        const html =
+            type === "otp"
+                ? generateOtpTemplate(body)
+                : generateNormalEmailTemplate(body);
+
+        const info = await transporter.sendMail({
+            from: `"Atif" <${process.env.EMAIL_USER}>`,
+            to,
             subject: "Zapier",
-            html:
-                type === "otp"
-                    ? generateOtpTemplate(body)
-                    : generateNormalEmailTemplate(body),
+            html,
         });
 
-        console.log("data from resend email = ", data);
+        console.log("Email sent:", info.messageId);
     } catch (error) {
-        // return console.error({ error });
-        console.log("Error while sending email = ", error);
+        console.error("Error while sending email:", error);
     }
 }
 
