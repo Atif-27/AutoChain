@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 
-const fetchAvailableTriggers = asyncHandler(
-    async (req: Request, res: Response) => {
+const fetchAvailableTriggers = async (req: Request, res: Response) => {
+    try {
         const availableTriggers = await prisma.availableTriggers.findMany({});
 
         if (!availableTriggers) {
@@ -21,7 +20,15 @@ const fetchAvailableTriggers = asyncHandler(
                     "Available Triggers fetched successfully",
                 ),
             );
-    },
-);
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
 export { fetchAvailableTriggers };

@@ -1,6 +1,5 @@
 import prisma from "../lib/prisma";
 import { Request, Response } from "express";
-import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { hashPassword, isPasswordCorrect } from "../services/passwordService";
@@ -20,139 +19,179 @@ import {
     SignupSchema,
 } from "@repo/zod-schemas";
 
-const signupUser = asyncHandler(async (req: Request, res: Response) => {
-    const body = req.body;
-    const parsedData = SignupSchema.safeParse(body);
+const signupUser = async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
+        const parsedData = SignupSchema.safeParse(body);
 
-    if (!parsedData.success) {
-        console.log("Error while parsing data = ", parsedData.error);
-        throw new ApiError(411, "Error while parsing data");
+        if (!parsedData.success) {
+            console.log("Error while parsing data = ", parsedData.error);
+            throw new ApiError(411, "Error while parsing data");
+        }
+
+        const userExists = await prisma.user.findFirst({
+            where: {
+                email: parsedData.data.email,
+            },
+        });
+
+        if (userExists) {
+            throw new ApiError(403, "User already exists!");
+        }
+
+        const hashedPassword = await hashPassword(parsedData.data.password);
+
+        const otp = otpCreate();
+
+        const user = await prisma.user.create({
+            data: {
+                email: parsedData.data.email,
+                password: hashedPassword,
+                name: parsedData.data.name,
+                otp: otp,
+            },
+        });
+
+        if (!user) {
+            throw new ApiError(500, "Account creation failed");
+        }
+
+        const emailBody = otp.toString();
+        await sendEmail(user.email, emailBody, "otp"); // sends out the otp to user email after successful account creation
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, "Account created successfully."));
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
     }
+};
 
-    const userExists = await prisma.user.findFirst({
-        where: {
-            email: parsedData.data.email,
-        },
-    });
+const signinUser = async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
 
-    if (userExists) {
-        throw new ApiError(403, "User already exists!");
-    }
+        const parsedData = SigninSchema.safeParse(body);
+        if (!parsedData.success) {
+            throw new ApiError(411, "Incorrect Inputs.");
+        }
 
-    const hashedPassword = await hashPassword(parsedData.data.password);
+        const user = await prisma.user.findFirst({
+            where: {
+                email: parsedData.data.email,
+            },
+        });
 
-    const otp = otpCreate();
+        if (!user) {
+            throw new ApiError(403, "Incorrect Credentials!");
+        }
 
-    const user = await prisma.user.create({
-        data: {
-            email: parsedData.data.email,
-            password: hashedPassword,
-            name: parsedData.data.name,
-            otp: otp,
-        },
-    });
-
-    if (!user) {
-        throw new ApiError(500, "Account creation failed");
-    }
-
-    const emailBody = otp.toString();
-    await sendEmail(user.email, emailBody, "otp"); // sends out the otp to user email after successful account creation
-
-    return res
-        .status(200)
-        .json(new ApiResponse(200, {}, "Account created successfully."));
-});
-
-const signinUser = asyncHandler(async (req: Request, res: Response) => {
-    const body = req.body;
-
-    const parsedData = SigninSchema.safeParse(body);
-    if (!parsedData.success) {
-        throw new ApiError(411, "Incorrect Inputs.");
-    }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            email: parsedData.data.email,
-        },
-    });
-
-    if (!user) {
-        throw new ApiError(403, "Incorrect Credentials!");
-    }
-
-    const isPasswordValid = await isPasswordCorrect(
-        parsedData.data.password,
-        user.password,
-    );
-    if (!isPasswordValid) {
-        throw new ApiError(403, "Incorrect Credentials!");
-    }
-
-    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-        user.id,
-    );
-
-    const options = {
-        httpOnly: true,
-        secure: true,
-    };
-
-    return res
-        .status(200)
-        .cookie("refreshToken", refreshToken, options)
-        .json(
-            new ApiResponse(
-                200,
-                { userId: user.id, accessToken: accessToken, verify: user.verify },
-                "Logged in successfully",
-            ),
+        const isPasswordValid = await isPasswordCorrect(
+            parsedData.data.password,
+            user.password,
         );
-});
+        if (!isPasswordValid) {
+            throw new ApiError(403, "Incorrect Credentials!");
+        }
 
-const signoutUser = asyncHandler(async (req: Request, res: Response) => {
-    await prisma.user.update({
-        where: {
-            id: req.id,
-        },
-        data: {
-            refreshToken: "",
-        },
-    });
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+            user.id,
+        );
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-    };
+        const options = {
+            httpOnly: true,
+            secure: true,
+        };
 
-    return res
-        .status(200)
-        .clearCookie("refreshToken", options)
-        .json(new ApiResponse(200, {}, "Logged Out Successfully"));
-});
+        return res
+            .status(200)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    { userId: user.id, accessToken: accessToken, verify: user.verify },
+                    "Logged in successfully",
+                ),
+            );
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+const signoutUser = async (req: Request, res: Response) => {
+    try {
+        await prisma.user.update({
+            where: {
+                id: req.id,
+            },
+            data: {
+                refreshToken: "",
+            },
+        });
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        };
+
+        return res
+            .status(200)
+            .clearCookie("refreshToken", options)
+            .json(new ApiResponse(200, {}, "Logged Out Successfully"));
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
 // Fetch the currently logged in user
-const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.id;
-    const user = await prisma.user.findFirst({
-        where: {
-            id: id,
-        },
-        select: {
-            name: true,
-            email: true,
-        },
-    });
+const getCurrentUser = async (req: Request, res: Response) => {
+    try {
+        const id = req.id;
+        const user = await prisma.user.findFirst({
+            where: {
+                id: id,
+            },
+            select: {
+                name: true,
+                email: true,
+            },
+        });
 
-    if (!user) {
-        throw new ApiError(404, "User not found");
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        return res.json({
+            user,
+        });
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
     }
-
-    return res.json({
-        user,
-    });
-});
+};
 
 // Generate both access and refresh token and save refresh token in db
 const generateAccessAndRefreshToken = async (userId: string) => {
@@ -191,130 +230,153 @@ const generateAccessAndRefreshToken = async (userId: string) => {
 };
 
 // Refreshing the access token after validating the refresh token
-const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
-    const incomingRefreshToken = req.cookies.refreshToken;
+const refreshAccessToken = async (req: Request, res: Response) => {
+    try {
+        const incomingRefreshToken = req.cookies.refreshToken;
 
-    if (!incomingRefreshToken) {
-        throw new ApiError(
-            HTTP_STATUS_CODES.REFRESH_TOKEN_NOT_FOUND,
-            HTTP_STATUS_MESSAGES.REFRESH_TOKEN_NOT_FOUND,
+        if (!incomingRefreshToken) {
+            throw new ApiError(
+                HTTP_STATUS_CODES.REFRESH_TOKEN_NOT_FOUND,
+                HTTP_STATUS_MESSAGES.REFRESH_TOKEN_NOT_FOUND,
+            );
+        }
+
+        const decodedToken = tokenVerifier(
+            incomingRefreshToken,
+            tokenType.RefreshToken,
         );
-    }
 
-    const decodedToken = tokenVerifier(
-        incomingRefreshToken,
-        tokenType.RefreshToken,
-    );
-
-    // if (!decodedToken) {
-    //   throw new ApiError(
-    //     HTTP_STATUS_CODES.INVALID_REFRESH_TOKEN,
-    //     HTTP_STATUS_MESSAGES.INVALID_REFRESH_TOKEN,
-    //   );
-    // }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            id: decodedToken?.id,
-        },
-    });
-
-    if (!user) {
-        throw new ApiError(
-            HTTP_STATUS_CODES.INVALID_REFRESH_TOKEN,
-            HTTP_STATUS_MESSAGES.INVALID_REFRESH_TOKEN,
-        );
-    }
-
-    const { accessToken } = await generateAccessAndRefreshToken(user.id);
-
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            {
-                userId: user.id,
-                accessToken: accessToken,
+        const user = await prisma.user.findFirst({
+            where: {
+                id: decodedToken?.id,
             },
-            "New Access Token has been generated successfully",
-        ),
-    );
-});
+        });
 
-const generateOtp = asyncHandler(async (req: Request, res: Response) => {
-    const userId = req.id;
+        if (!user) {
+            throw new ApiError(
+                HTTP_STATUS_CODES.INVALID_REFRESH_TOKEN,
+                HTTP_STATUS_MESSAGES.INVALID_REFRESH_TOKEN,
+            );
+        }
 
-    const user = await prisma.user.findFirst({
-        where: {
-            id: userId,
-        },
-    });
+        const { accessToken } = await generateAccessAndRefreshToken(user.id);
 
-    if (!user) {
-        throw new ApiError(404, "User not found");
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    userId: user.id,
+                    accessToken: accessToken,
+                },
+                "New Access Token has been generated successfully",
+            ),
+        );
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
     }
+};
 
-    const otp = otpCreate();
-    await prisma.user.update({
-        where: {
-            id: userId,
-        },
-        data: {
-            otp: otp,
-        },
-    });
+const generateOtp = async (req: Request, res: Response) => {
+    try {
+        const userId = req.id;
 
-    const body = otp.toString();
-    await sendEmail(user.email, body, "otp");
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+            },
+        });
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, {}, "OTP generated successfully"));
-});
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
 
-const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
-    const userId = req.id; // or const userId = req.id // from authMiddleware
-    const { otp } = req.body;
+        const otp = otpCreate();
+        await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                otp: otp,
+            },
+        });
 
-    if (!userId || !otp) {
-        throw new ApiError(404, "All fields are required");
+        const body = otp.toString();
+        await sendEmail(user.email, body, "otp");
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, "OTP generated successfully"));
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
     }
+};
 
-    if (!otp || typeof otp !== "number") {
-        throw new ApiError(404, "Invalid Credentials");
+const verifyEmail = async (req: Request, res: Response) => {
+    try {
+        const userId = req.id;
+        const { otp } = req.body;
+
+        if (!userId || !otp) {
+            throw new ApiError(404, "All fields are required");
+        }
+
+        if (!otp || typeof otp !== "number") {
+            throw new ApiError(404, "Invalid Credentials");
+        }
+
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+            },
+        });
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        if (otp !== user.otp) {
+            throw new ApiError(400, "Invalid OTP");
+        }
+
+        const response = await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                otp: null,
+                verify: true,
+            },
+        });
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, "Email verified successfully"));
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
     }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            id: userId,
-        },
-    });
-
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    if (otp !== user.otp) {
-        throw new ApiError(400, "Invalid OTP");
-    }
-
-    const response = await prisma.user.update({
-        where: {
-            id: userId,
-        },
-        data: {
-            otp: null,
-            verify: true,
-        },
-    });
-
-    return res
-        .status(200)
-        .json(new ApiResponse(200, {}, "Email verified successfully"));
-});
+};
 
 // Forgot Password Controllers
-const generateForgotPasswordOTP = asyncHandler(
-    async (req: Request, res: Response) => {
+const generateForgotPasswordOTP = async (req: Request, res: Response) => {
+    try {
         const body = req.body;
         const parsedData = emailFormSchema.safeParse(body);
 
@@ -355,11 +417,19 @@ const generateForgotPasswordOTP = asyncHandler(
         return res
             .status(200)
             .json(new ApiResponse(200, {}, "OTP sent successfully"));
-    },
-);
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
-const validateForgotPasswordOTP = asyncHandler(
-    async (req: Request, res: Response) => {
+const validateForgotPasswordOTP = async (req: Request, res: Response) => {
+    try {
         const { email, otp } = req.body;
         if (!email || !otp) {
             throw new ApiError(404, "All fields are required");
@@ -397,11 +467,19 @@ const validateForgotPasswordOTP = asyncHandler(
             });
             return res.status(200).json(new ApiResponse(200, {}, "OTP verified"));
         }
-    },
-);
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
-const resetForgotPassword = asyncHandler(
-    async (req: Request, res: Response) => {
+const resetForgotPassword = async (req: Request, res: Response) => {
+    try {
         const {
             email,
             password,
@@ -456,8 +534,16 @@ const resetForgotPassword = asyncHandler(
             .json(
                 new ApiResponse(200, {}, "Your password has been reset successfully"),
             );
-    },
-);
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
 export {
     signupUser,

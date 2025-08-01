@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 
-const fetchAvailableActions = asyncHandler(
-    async (req: Request, res: Response) => {
+const fetchAvailableActions = async (req: Request, res: Response) => {
+    try {
         const availableActions = await prisma.availableActions.findMany({});
 
         if (!availableActions) {
@@ -21,7 +20,15 @@ const fetchAvailableActions = asyncHandler(
                     "Available Actions fetched successfully",
                 ),
             );
-    },
-);
+    } catch (error: any) {
+        console.log("Error Occurred = ", error);
+        return res.status(error.statusCode || 500).json({
+            error: true,
+            statusCode: error.statusCode,
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
 export { fetchAvailableActions };
