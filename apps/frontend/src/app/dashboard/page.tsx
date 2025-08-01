@@ -67,10 +67,10 @@ export default function DashboardPage() {
   }, []);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -86,13 +86,16 @@ export default function DashboardPage() {
               <span className="text-lg font-medium text-white">Zapier</span>
             </Link>
             <div className="flex items-center space-x-6">
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className="text-white hover:text-white/80 font-medium"
               >
                 Dashboard
               </Link>
-              <LogoutButton variant="ghost" className="px-4 py-1.5 rounded-md border border-white/20 text-white/90 hover:bg-white/10 transition-colors" />
+              <LogoutButton
+                variant="ghost"
+                className="px-4 py-1.5 rounded-md border border-white/20 text-white/90 hover:bg-white/10 transition-colors"
+              />
             </div>
           </div>
         </div>
@@ -130,17 +133,21 @@ export default function DashboardPage() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/10 hover:bg-transparent">
-                  <TableHead className="text-white/70">Trigger and Actions</TableHead>
+                  <TableHead className="text-white/70">
+                    Trigger and Actions
+                  </TableHead>
                   <TableHead className="text-white/70">Zap Id</TableHead>
                   <TableHead className="text-white/70">Webhook Url</TableHead>
                   <TableHead className="text-white/70">Created At</TableHead>
-                  <TableHead className="text-white/70 w-[50px]">Action</TableHead>
+                  <TableHead className="text-white/70 w-[50px]">
+                    Action
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {zaps.map((zap) => (
-                  <TableRow 
-                    key={zap.id} 
+                  <TableRow
+                    key={zap.id}
                     className="border-white/10 hover:bg-white/5 transition-colors"
                   >
                     <TableCell>
@@ -151,7 +158,7 @@ export default function DashboardPage() {
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-teal-500/10 to-emerald-500/10 p-2 flex items-center justify-center">
                               <img
                                 src={zap.trigger.type.image}
-                                alt={zap.trigger.type.name || 'Trigger'}
+                                alt={zap.trigger.type.name || "Trigger"}
                                 className="w-full h-full object-contain"
                               />
                             </div>
@@ -165,7 +172,7 @@ export default function DashboardPage() {
                               <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-teal-500/10 to-emerald-500/10 p-2 flex items-center justify-center">
                                 <img
                                   src={action.type.image}
-                                  alt={action.type.name || 'Action'}
+                                  alt={action.type.name || "Action"}
                                   className="w-full h-full object-contain"
                                 />
                               </div>
@@ -179,7 +186,8 @@ export default function DashboardPage() {
                     </TableCell>
                     <TableCell className="max-w-[300px]">
                       <div className="truncate text-sm text-white/70 font-mono">
-                        {zap.webhookUrl || `http://localhost:3002/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`}
+                        {zap.webhookUrl ||
+                          `http://localhost:3002/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`}
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-white/70">
@@ -187,7 +195,9 @@ export default function DashboardPage() {
                     </TableCell>
                     <TableCell>
                       <button className="p-2 hover:bg-white/10 rounded-md transition-colors group">
-                        <span className="block w-4 text-center text-white/70 group-hover:text-white">⋯</span>
+                        <span className="block w-4 text-center text-white/70 group-hover:text-white">
+                          ⋯
+                        </span>
                       </button>
                     </TableCell>
                   </TableRow>
