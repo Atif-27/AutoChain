@@ -1,78 +1,82 @@
 import { BACKEND_URL } from "@/app/config";
-// import useStore from "@/store";
-// import { HTTP_STATUS_CODES, HTTP_STATUS_MESSAGES } from "@repo/http-status";
+import useStore from "@/store";
+import { HTTP_STATUS_CODES, HTTP_STATUS_MESSAGES } from "@repo/http-status";
 import axios from "axios";
-// import refreshAccessToken from "./refreshAccessToken";
-// import {
-//     handleAccessTokenErrors,
-//     handleRefreshTokenErrors,
-// } from "./authTokenErrorHandler";
+import refreshAccessToken from "./refreshAccessToken";
+import {
+    handleAccessTokenErrors,
+    handleRefreshTokenErrors,
+} from "./authTokenErrorHandler";
 
 const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
-    headers: {
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyMzQ0YmJiLWQ0NzctNDBhYy1iN2VlLTBjZTllYzdlNjk4NCIsIm5hbWUiOiJKb2huIERvZSIsImVtYWlsIjoiSm9obiBEb2UiLCJpYXQiOjE3NTM5OTA3MDgsImV4cCI6MTc1NDE2MzUwOH0.BySYKxmx0l1XUPzGNd1hhhHHRBuhs_i64dXYig99b3A"
-    },
     withCredentials: true,
 });
 
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         const accessToken = useStore.getState().accessToken;
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const accessToken = useStore.getState().accessToken;
 
-//         config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.Authorization = `Bearer ${accessToken}`;
 
-//         return config;
-//     },
-//     (error: any) => {
-//         console.log("Error in request ", error);
+        return config;
+    },
+    (error) => {
+        console.log("Error in request ", error);
 
-//         return Promise.reject(error);
-//     },
-// );
+        return Promise.reject(error);
+    },
+);
 
-// axiosInstance.interceptors.response.use(
-//     (response) => {
-//         return response;
-//     },
-//     async (error: any) => {
-//         console.log("Error in response ", error);
+axiosInstance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    async (error) => {
+        console.log("Error in response ", error);
 
-//         // handling invalid, expired not available access and refresh token
-//         handleAccessTokenErrors(error);
+        // handling invalid, expired not available access and refresh token
+        handleAccessTokenErrors(error);
 
-//         const originalRequest = error.config;
+        const originalRequest = error.config;
 
-//         // If Access Token has expired, attempt to refresh access token by validating the refresh token
-//         if (
-//             error.response.data.statusCode ===
-//             HTTP_STATUS_CODES.EXPIRED_ACCESS_TOKEN &&
-//             error.response.data.message ===
-//             HTTP_STATUS_MESSAGES.EXPIRED_ACCESS_TOKEN &&
-//             !originalRequest._retry
-//         ) {
-//             //Handle refreshing the refresh token logic and resending the request
-//             originalRequest._retry = true;
+        // If Access Token has expired, attempt to refresh access token by validating the refresh token
+        if (
+            error.response.data.statusCode ===
+            HTTP_STATUS_CODES.EXPIRED_ACCESS_TOKEN &&
+            error.response.data.message ===
+            HTTP_STATUS_MESSAGES.EXPIRED_ACCESS_TOKEN &&
+            !originalRequest._retry
+        ) {
+            //Handle refreshing the refresh token logic and resending the request
+            originalRequest._retry = true;
 
-//             try {
-//                 const { userId, newAccessToken } = await refreshAccessToken();
+            try {
+                const { userId, newAccessToken } = await refreshAccessToken();
 
-//                 useStore.getState().updateUserDetails(userId, newAccessToken);
+                useStore.getState().updateUserDetails(userId, newAccessToken);
 
-//                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-//                 return axiosInstance(originalRequest);
-//             } catch (refreshError: any) {
-//                 console.log("Refresh error = ", refreshError);
+                return axiosInstance(originalRequest);
+            } catch (refreshError: unknown) {
+                console.log("Refresh error = ", refreshError);
 
-//                 handleRefreshTokenErrors(refreshError);
+                handleRefreshTokenErrors(refreshError as {
+                    response: {
+                        data: {
+                            statusCode: number,
+                            message: string;
+                        };
+                    };
+                });
 
-//                 return Promise.reject(refreshError);
-//             }
-//         }
+                return Promise.reject(refreshError);
+            }
+        }
 
-//         return Promise.reject(error);
-//     },
-// );
+        return Promise.reject(error);
+    },
+);
 
 export default axiosInstance;
