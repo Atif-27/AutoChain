@@ -17,6 +17,7 @@
     "@repo/zod-schemas": "*",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
+    "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
@@ -26,7 +27,6 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.9",
-    "@types/cors": "^2.8.19"
+    "@types/cookie-parser": "^1.4.9"
   }
 }
