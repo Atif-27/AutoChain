@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
+import { LogoutButton } from "@/components/ui/logout-button";
 
 interface Zap {
   id: string;
@@ -91,11 +92,7 @@ export default function DashboardPage() {
               >
                 Dashboard
               </Link>
-              <button 
-                className="px-4 py-1.5 rounded-md border border-white/20 text-white/90 hover:bg-white/10 transition-colors"
-              >
-                Logout
-              </button>
+              <LogoutButton variant="ghost" className="px-4 py-1.5 rounded-md border border-white/20 text-white/90 hover:bg-white/10 transition-colors" />
             </div>
           </div>
         </div>
