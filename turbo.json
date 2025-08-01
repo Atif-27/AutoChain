@@ -1,15 +1,13 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
-  "ui": "tui",
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    ".env*"
+  ],
   "tasks": {
     "build": {
       "dependsOn": [
         "^build",
         "^db:generate"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
       ],
       "outputs": [
         ".next/**",
@@ -20,12 +18,14 @@
     "lint": {
       "dependsOn": [
         "^lint"
-      ]
+      ],
+      "outputs": []
     },
     "check-types": {
       "dependsOn": [
         "^check-types"
-      ]
+      ],
+      "outputs": []
     },
     "dev": {
       "dependsOn": [
