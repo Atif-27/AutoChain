@@ -9,6 +9,7 @@ async function main() {
             name: "Webhook",
             image:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIovxkR9l-OlwpjTXV1B4YNh0W_s618ijxAQ&s",
+
         },
     });
 
@@ -18,11 +19,20 @@ async function main() {
             name: "Send Solana",
             image:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT10458YI0Lf1-Zx4fGwhWxI_x4oPCD034xaw&s",
+            metadataFieldInfo: JSON.stringify({
+                recipient: { type: "string", required: true },
+                amount: { type: "number", required: true },
+            }),
         }, {
             id: "email",
             name: "Send Email",
             image:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4nd82eFk5SaBPRIeCpmwL7A4YSokA-kXSmw&s",
+            metadataFieldInfo: JSON.stringify({
+                to: { type: "string", required: true },
+                subject: { type: "string", required: true },
+                body: { type: "string", required: false },
+            }),
         }]
     });
 

@@ -91,10 +91,11 @@ model Action {
 }
 
 model AvailableActions {
-  id      String   @id @default(uuid())
-  name    String
-  image   String?
-  actions Action[]
+  id                String   @id @default(uuid())
+  name              String
+  metadataFieldInfo Json     @default("{}")
+  image             String?
+  actions           Action[]
 }
 
 model AvailableTriggers {
