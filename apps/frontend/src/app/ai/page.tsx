@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import Link from "next/link";
-
+import MessageRenderer from "@/components/MessageRenderer";
+import Image from "next/image";
+interface Option {
+  id: string | number;
+  name: string;
+  image: string;
+}
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -63,8 +69,61 @@ export default function ChatPage() {
                 <div className="whitespace-pre-wrap">
                   {m.parts.map((part, i) => {
                     if (part.type === "text") {
-                      return <span key={i}>{part.text}</span>;
+                      // Try to detect JSON inside the text
+                      try {
+                        const cleanText = part.text
+                          .replace(/```json/gi, "")
+                          .replace(/```/g, "")
+                          .trim();
+
+                        const maybeJson = JSON.parse(cleanText);
+                        if (maybeJson.type === "options") {
+                          return (
+                            <div key={i}>
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: maybeJson.title,
+                                }}
+                              ></div>
+                              <div className="grid grid-cols-2 gap-4">
+                                {(maybeJson.options as Option[]).map((opt) => (
+                                  <div
+                                    key={opt.id}
+                                    onClick={() => {
+                                      sendMessage({
+                                        text: `Select ${opt!.id ?? ""}`,
+                                      });
+                                    }}
+                                    className="flex cursor-pointer flex-col items-center p-3 bg-gray-800 rounded-xl w-fit"
+                                  >
+                                    <Image
+                                      width={50}
+                                      height={50}
+                                      src={opt!.image}
+                                      alt={opt!.name}
+                                      className="mb-2"
+                                    />
+                                    <span>{opt!.name}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        }
+                      } catch {
+                        // Not JSON, just render text
+                        return (
+                          <div key={i}>
+                            <MessageRenderer markdown={part.text} />
+                          </div>
+                        );
+                      }
                     }
+
+                    if (part.type === "dynamic-tool") {
+                      return <span key={i}>⚙️ Tool output</span>;
+                    }
+
                     return <span key={i}>[{part.type}]</span>;
                   })}
                 </div>
