@@ -50,7 +50,7 @@ export default function ChatPage() {
           <h1 className="text-2xl font-bold mb-4">Smart AI Agent</h1>
           <div className="space-x-5">
             <Link href="/">Home</Link>
-            <Link href="/">Dashboard</Link>
+            <Link href="/dashboard">Dashboard</Link>
           </div>
         </div>
         {/* Chat window */}
@@ -130,7 +130,23 @@ export default function ChatPage() {
               </div>
             ))
           ) : (
-            <div>Write a message to talk with AI</div>
+            <div
+              className="flex flex-col items-center justify-center h-full"
+            >
+              <h1 className="text-2xl font-bold">
+                Write a message to talk with AI
+              </h1>
+                <div className="flex flex-col items-center justify-center gap-2 mt-4 ">
+                <div
+                onClick={() => {
+                  sendMessage({
+                    text: "Hi, Please create a automated workflow for me",
+                  });
+                }}
+                className="text-sm text-gray-400 cursor-pointer border border-gray-700 rounded-lg p-2 hover:bg-gray-800 transition-colors duration-300 w-fit"
+                >Create an automated workflow</div>
+              </div>
+            </div>
           )}
           <div ref={bottomRef} />
 

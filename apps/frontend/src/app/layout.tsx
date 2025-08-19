@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Zapier",
-  description: "Automate everything with zapier",
+  description: "Automate everything with AutoFlow",
 };
 
 export default function RootLayout({

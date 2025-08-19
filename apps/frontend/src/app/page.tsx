@@ -36,13 +36,11 @@ export default function Home() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="relative inline-block group">
                 <h1 className="text-4xl font-medium tracking-tight sm:text-6xl bg-gradient-to-b from-white to-white/80 bg-clip-text text-transparent pb-4 ">
-                  Automate Your Workflow with Powerful Chains
+                Automate Your Workflow with Powerful Chains
                 </h1>
               </div>
               <p className="mt-6 text-lg leading-8 text-white/60">
-                Connect your tools and automate your workflow with webhooks and
-                Gmail integration. Build powerful automation chains that work
-                while you sleep.
+              Connect your tools and automate your workflow with webhooks and Gmail integration. Build powerful automation chains that work while you sleep.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link
@@ -133,12 +131,12 @@ export default function Home() {
                 </h3>
               </div>
               <p className="mt-4 text-sm text-white/60 leading-relaxed">
-                Receive real-time data from any service that can make HTTP
-                requests. Perfect for event-driven automation.
+                Create event-driven automations with real-time webhooks. Trigger workflows 
+                instantly when data changes or events occur in your connected services.
               </p>
               <div className="mt-auto">
                 <span className="inline-flex items-center text-sm text-teal-500">
-                  Available Now
+                  Instant Triggers
                   <svg
                     className="ml-2 w-4 h-4"
                     fill="none"
@@ -184,12 +182,12 @@ export default function Home() {
                 </h3>
               </div>
               <p className="mt-4 text-sm text-white/60 leading-relaxed">
-                Send and manage emails through Gmail integration. Create
-                powerful email automation workflows.
+                Automate email communications with smart Gmail integration. Send personalized 
+                responses, notifications, and manage email workflows intelligently.
               </p>
               <div className="mt-auto">
                 <span className="inline-flex items-center text-sm text-emerald-500">
-                  Available Now
+                  Smart Email Actions
                   <svg
                     className="ml-2 w-4 h-4"
                     fill="none"
@@ -235,25 +233,25 @@ export default function Home() {
                 </h3>
               </div>
               <p className="mt-4 text-sm text-white/60 leading-relaxed">
-                We&#39; re working on bringing more powerful integrations to
-                AutoChain. Soon you&#39; ll be able to connect with:
+                We're expanding our automation capabilities with powerful new integrations 
+                and features. Coming soon to enhance your workflow:
               </p>
               <ul className="mt-6 space-y-4 text-sm text-white/60">
                 <li className="flex items-center space-x-3">
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-                  <span>Slack & Discord Integration</span>
+                  <span>Advanced AI Workflow Suggestions</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-                  <span>Scheduled Triggers & Cron Jobs</span>
+                  <span>Smart Scheduling & Time-Based Triggers</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-                  <span>GitHub & GitLab Workflows</span>
+                  <span>Custom API Builder with AI Assistance</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
-                  <span>Custom API Integration</span>
+                  <span>Natural Language Workflow Creation</span>
                 </li>
               </ul>
               <div className="mt-auto">
@@ -338,10 +336,95 @@ export default function Home() {
                 </div>
               </div>
               <p className="mt-4 text-sm text-white/60">
-                Automatically send email notifications when your webhook
-                endpoint receives data. Perfect for notifications, alerts, and
-                automated responses.
+                Create intelligent workflows that automatically process incoming webhook data 
+                and send personalized email responses using AI-powered content generation. 
+                Perfect for customer support, notifications, and automated communications.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Assistant Section */}
+      <div className="relative py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative isolate">
+            {/* Background Effects */}
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,211,182,0.1)_0,rgba(0,0,0,0)_65%)]" />
+            </div>
+
+            <div className="relative">
+              <div className="text-center">
+                <h2 className="text-3xl font-medium tracking-tight text-white sm:text-4xl">
+                  AI-Powered Workflow Creation
+                </h2>
+                <p className="mt-4 text-lg text-white/60">
+                  Let our intelligent AI assistant help you build and optimize your automation workflows
+                </p>
+              </div>
+
+              <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {/* Smart Suggestions */}
+                <div className="relative rounded-2xl bg-white/[0.07] p-6 hover:bg-white/[0.09] transition-colors duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none rounded-2xl" />
+                  <div className="relative">
+                    <div className="h-12 w-12 rounded-2xl bg-teal-500/10 flex items-center justify-center mb-4">
+                      <svg className="w-6 h-6 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-white">Smart Suggestions</h3>
+                    <p className="mt-2 text-sm text-white/60">
+                      Get intelligent recommendations for actions and triggers based on your workflow context
+                    </p>
+                  </div>
+                </div>
+
+                {/* Natural Language */}
+                <div className="relative rounded-2xl bg-white/[0.07] p-6 hover:bg-white/[0.09] transition-colors duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none rounded-2xl" />
+                  <div className="relative">
+                    <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4">
+                      <svg className="w-6 h-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-white">Natural Language</h3>
+                    <p className="mt-2 text-sm text-white/60">
+                      Describe your automation needs in plain English and let AI translate it into working workflows
+                    </p>
+                  </div>
+                </div>
+
+                {/* Optimization */}
+                <div className="relative rounded-2xl bg-white/[0.07] p-6 hover:bg-white/[0.09] transition-colors duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none rounded-2xl" />
+                  <div className="relative">
+                    <div className="h-12 w-12 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-4">
+                      <svg className="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-white">Workflow Optimization</h3>
+                    <p className="mt-2 text-sm text-white/60">
+                      AI analyzes your workflows and suggests improvements for efficiency and reliability
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-16 flex justify-center">
+                <Link
+                  href="/ai"
+                  className="group relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-black"
+                >
+                  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#14D3B6_0%,#059669_50%,#14D3B6_100%)]" />
+                  <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-black px-8 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                    Try AI Assistant
+                  </span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

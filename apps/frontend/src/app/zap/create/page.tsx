@@ -125,6 +125,10 @@ const CreateNewZap = () => {
           <Button className="z-10" onClick={publishZapHandler}>
             Publish
           </Button>
+          <Button className="z-10  cursor-pointer bg-teal-500 hover:bg-teal-600" onClick={() => router.push("/ai")}>
+              <div className="text-white">
+                Build with AI</div>
+          </Button>
         </div>
       </ReactFlow>
     </div>

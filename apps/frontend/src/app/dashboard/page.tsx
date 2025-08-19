@@ -12,6 +12,7 @@ import {
 import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
 import { LogoutButton } from "@/components/ui/logout-button";
+import { CopyableWebhookUrl } from "@/components/CopyableWebhookUrl";
 
 interface Zap {
   id: string;
@@ -81,9 +82,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-teal-500 to-emerald-500 flex items-center justify-center">
-                <span className="font-semibold text-white">Z</span>
+                <span className="font-semibold text-white">A</span>
               </div>
-              <span className="text-lg font-medium text-white">Zapier</span>
+              <span className="text-lg font-medium text-white">AutoChain</span>
             </Link>
             <div className="flex items-center space-x-6">
               <Link
@@ -91,6 +92,12 @@ export default function DashboardPage() {
                 className="text-white hover:text-white/80 font-medium"
               >
                 Dashboard
+              </Link>
+              <Link
+                href="/ai"
+                className="text-teal-500 hover:text-teal/80 font-medium shine-effect"
+              >
+                AI
               </Link>
               <LogoutButton
                 variant="ghost"
@@ -184,11 +191,13 @@ export default function DashboardPage() {
                     <TableCell className="font-mono text-sm text-white/70">
                       {zap.id}
                     </TableCell>
-                    <TableCell className="max-w-[300px]">
-                      <div className="truncate text-sm text-white/70 font-mono">
-                        {zap.webhookUrl ||
-                          `http://localhost:3002/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`}
-                      </div>
+                    <TableCell>
+                      <CopyableWebhookUrl
+                        url={
+                          zap.webhookUrl ||
+                          `http://localhost:3002/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`
+                        }
+                      />
                     </TableCell>
                     <TableCell className="text-sm text-white/70">
                       {formatDate(zap.createdAt || new Date().toISOString())}

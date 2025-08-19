@@ -10,14 +10,18 @@ const AvailableActions = () => {
   const nodeId = useNodeId();
   const { updateNodeData } = useReactFlow();
   const [actions, setActions] = useState<AvailableAction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchAvailableActions = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance.get("/api/v1/action/available");
 
       setActions(res.data.data);
     } catch (error) {
       console.log("Error while fetching the available actions = ", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -35,7 +39,12 @@ const AvailableActions = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {actions.length > 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+          <span className="ml-2">Loading...</span>
+        </div>
+      ) : actions.length > 0 ? (
         <>
           {actions.map((action) => (
             <DialogClose asChild key={action.id}>
