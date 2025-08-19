@@ -1,174 +1,164 @@
-# AutoChain - Workflow Automation Platform
+# AutoChain - AI Powered Workflow Automation Platform
 
-AutoChain is a modern workflow automation platform that enables seamless integration between different services and applications. Built with scalability and real-time processing in mind, it leverages cutting-edge technologies to provide reliable automation solutions.
+A workflow automation platform that allows users to create automated workflows (Zaps) by connecting different services and triggers.
 
-![AutoChain Banner](apps/frontend/public/banner.png)
 
-## 🚀 Features
+## ✨ Features
 
-- **Webhook Integration**: Create custom HTTP endpoints to receive and process real-time data
-- **Gmail Actions**: Automate email workflows with Gmail integration
-- **Real-time Processing**: Powered by Apache Kafka for reliable event streaming
-- **Scalable Architecture**: Microservices-based design for high availability
-- **Modern UI**: Built with Next.js 14 and Tailwind CSS for a seamless user experience
+### Authentication & User Management
+- Email-based signup/signin
+- OTP verification
+- Forgot password flow
+- JWT-based authentication with refresh tokens
+- Cookie-based session management
 
-## 🏗️ Project Structure
+### Workflow Builder 
+- Visual workflow editor using React Flow 
+- Drag-and-drop interface
+- Real-time validation
+- Save and edit workflows
+
+### AI Assistant
+- Built with AI SDK (@ai-sdk/react, @ai-sdk/openai)
+- Natural language workflow creation
+- Smart suggestions for actions
+- Context-aware help
+- Markdown rendering with syntax highlighting
+
+### Email Features
+- Custom email templates
+- OTP delivery
+- Transactional emails
+- Email verification
+
+
+## 🚀 Tech Stack
+### Frontend
+- **Next.js 15.4** - React framework with App Router
+- **React 19.1** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **AI SDK (@ai-sdk/react, @ai-sdk/openai)** - AI-powered chat interface
+- **@xyflow/react** - Interactive node-based workflow editor
+- **Radix UI** - Accessible UI primitives
+- **Zustand** - State management
+- **React Hook Form** with Zod - Form handling and validation
+- **React Markdown** - Markdown rendering with syntax highlighting
+
+### Backend
+- **Express 5.1** - Node.js web framework
+- **TypeScript** - Type safety
+- **Prisma** - Type-safe ORM with PostgreSQL
+- **JWT** - Authentication with jsonwebtoken
+- **bcrypt** - Password hashing
+- **Cookie Parser** - HTTP cookie parsing
+- **CORS** - Cross-origin resource sharing
+
+### Development & Build Tools
+- **Turborepo** - Monorepo build system
+- **Node.js >=18** - Runtime environment
+- **npm 10.9.2** - Package manager
+- **ESLint & Prettier** - Code quality and formatting
+
+## 📦 Project Structure
+
+This is a monorepo managed with Turborepo:
 
 ```
 apps/
-├── frontend/               # Next.js 14 frontend application
-│   ├── src/
-│   │   ├── app/           # App router pages
-│   │   ├── components/    # React components
-│   │   └── lib/          # Utility functions
-│   └── public/           # Static assets
-├── hooks/                # Shared hooks package
-├── primary-backend/      # Main API service
-├── processor/           # Event processing service
-└── worker/             # Background job worker
+  ├── frontend/          # Next.js web application
+  ├── primary-backend/   # Main API server
+  ├── processor/         # Event processor service
+  ├── worker/           # Background job worker
+  └── hooks/            # Shared React hooks
 
 packages/
-├── database/           # Prisma database package
-├── eslint-config/     # Shared ESLint configurations
-├── http-status/       # HTTP status codes package
-├── mailer-config/     # Email service configuration
-├── typescript-config/ # Shared TypeScript configurations
-├── ui/               # Shared UI components
-└── zod-schemas/     # Shared validation schemas
+  ├── database/         # Prisma schema and migrations
+  ├── http-status/      # HTTP status codes and messages
+  ├── mailer-config/    # Email templates and config
+  ├── zod-schemas/      # Shared validation schemas
+  └── ui/              # Shared UI components
 ```
 
-## 🛠️ Technology Stack
 
-### Frontend
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Shadcn UI
-- React Flow (for workflow builder)
+## Screenshots
+![Alt text](public/image-1.png)
 
-### Backend
-- Node.js
-- Express
-- TypeScript
-- Prisma (ORM)
-- Apache Kafka
-- Redis (caching)
+![alt text](public/workflow.png)
+   
+![alt text](public/agent.png)
 
-### Infrastructure
-- Docker
-- Kubernetes
-- Apache Kafka
-- Redis
-- PostgreSQL
+## 🛣️ API Routes
 
-## 🌟 Core Components
+### User Routes
+```
+POST /api/user/signup         # Create new account
+POST /api/user/signin        # Login
+POST /api/user/signout       # Logout
+POST /api/user/refresh-token # Refresh access token
+POST /api/user/forgot-password # Generate reset OTP
+POST /api/user/verify-email  # Email verification
+```
 
-### Event Processing Pipeline
-- **Webhook Service**: Handles incoming webhook requests
-- **Event Processor**: Processes events using Apache Kafka
-- **Action Worker**: Executes automated actions
+### Zap Routes
+```
+POST /api/zap               # Create new zap
+GET /api/zap               # List all zaps
+GET /api/zap/:zapId        # Get single zap
+DELETE /api/zap/:zapId     # Delete zap
+```
 
-### Data Flow
-1. Webhooks trigger events
-2. Events are published to Kafka topics
-3. Processor service consumes events
-4. Worker executes corresponding actions
-5. Results are stored and notifications sent
+### Trigger & Action Routes
+```
+GET /api/trigger/available  # List available triggers
+GET /api/action/available  # List available actions
+```
 
-## 🚦 Getting Started
+## 🚧 Future Enhancements
 
-### Prerequisites
-- Node.js 18+
-- Docker
-- Apache Kafka
-- PostgreSQL
-- Redis
+1. **Form Builder**
+   - Custom form creation
+   - Form analytics
+   - Multiple form templates
 
-### Installation
+2. **Advanced AI Actions**
+   - Text analysis
+   - Image processing
+   - Natural language processing
+   - Custom model integration
 
-1. Clone the repository:
+3. **Event Processing**
+   - Kafka integration
+   - Transaction Outbox pattern
+   - Async job processing
+   - Event replay capability
+
+## 🛠️ Development
+
+1. Clone the repository
 ```bash
-git clone <repository-url>
-cd autochain
+git clone https://github.com/Atif-27/AutoChain
 ```
 
-2. Install dependencies:
+2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
+3. Set up environment variables
 ```bash
 cp .env.example .env
 ```
 
-4. Start the development environment:
+4. Start development servers
 ```bash
-# Start infrastructure services
-docker-compose up -d
-
-# Start development servers
 npm run dev
 ```
 
-### Development Scripts
+## 📝 License
 
-- `npm run dev`: Start all services in development mode
-- `npm run build`: Build all packages and applications
-- `npm run test`: Run tests across all packages
-- `npm run lint`: Run linting across all packages
-
-## 📦 Deployment
-
-The platform can be deployed using Docker and Kubernetes:
-
-```bash
-# Build Docker images
-docker-compose -f docker-compose.prod.yml build
-
-# Deploy to Kubernetes
-kubectl apply -f k8s/
-```
-
-## 🔄 Event Processing Architecture
-
-### Kafka Topics
-- `incoming-webhooks`: Raw webhook events
-- `processed-events`: Validated and transformed events
-- `action-queue`: Actions ready for execution
-- `action-results`: Execution results
-
-### Processing Stages
-1. **Event Ingestion**: Webhooks → Kafka
-2. **Event Processing**: Validation and transformation
-3. **Action Execution**: Task processing and external API calls
-4. **Result Handling**: Status updates and notifications
-
-## 🔐 Security Features
-
-- JWT-based authentication
-- Rate limiting for webhooks
-- Request validation using Zod
-- Secure credential storage
-- CORS protection
-
-## 🎯 Future Roadmap
-
-- [ ] Slack integration
-- [ ] Discord webhooks
-- [ ] Scheduled triggers (cron jobs)
-- [ ] Custom API integration
-- [ ] Advanced workflow builder
-- [ ] Workflow templates
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+MIT
 
 ---
 
-Built with ❤️ by the AutoChain Team
+Built with ❤️ using modern web technologies
