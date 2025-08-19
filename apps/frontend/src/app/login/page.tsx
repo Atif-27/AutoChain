@@ -27,15 +27,6 @@ const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const updateUserDetails = useStore((state) => state.updateUserDetails);
-  const userId = useStore((state) => state.userId);
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (userId) {
-      console.log("Already logged in, redirecting to dashboard");
-      router.push("/dashboard");
-    }
-  }, [userId, router]);
 
   const signinForm = useForm<z.infer<typeof SigninSchema>>({
     resolver: zodResolver(SigninSchema),
@@ -61,6 +52,7 @@ const Login = () => {
       console.log("Login successful:", {
         userId,
         hasAccessToken: !!accessToken,
+        verificationStatus: verify,
       });
 
       // Update store first
@@ -69,9 +61,10 @@ const Login = () => {
 
       // Then handle navigation
       if (verify === false) {
-        console.log("Redirecting to verify page");
+        console.log("User not verified, redirecting to verify page");
         router.push(`/verify/${userId}`);
       } else {
+        console.log("User is verified, proceeding with normal flow");
         const redirectTo = searchParams.get("redirect");
         console.log("Redirecting after login:", redirectTo || "/dashboard");
         router.push(redirectTo || "/dashboard");
@@ -210,11 +203,7 @@ const Login = () => {
 };
 
 const LoginPage = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Login />
-    </Suspense>
-  );
+  return <Login />;
 };
 
 export default LoginPage;

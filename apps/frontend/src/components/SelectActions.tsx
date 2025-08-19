@@ -40,7 +40,7 @@ const SelectActionEvent = () => {
           </SheetDescription>
         </SheetHeader>
         <div className="mt-4">
-          {actionNode?.data.actionName === "gmail" ? (
+          {actionNode?.data.actionName === "Send Email" ? (
             <EmailSelector closeSheet={closeSheet} />
           ) : (
             <SolanaSelector closeSheet={closeSheet} />

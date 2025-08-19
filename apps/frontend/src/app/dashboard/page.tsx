@@ -195,7 +195,8 @@ export default function DashboardPage() {
                       <CopyableWebhookUrl
                         url={
                           zap.webhookUrl ||
-                          `http://localhost:3002/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`
+                          process.env.NEXT_PUBLIC_HOOKS_URL +
+                            `/hooks/catch/a8d5197a-d152-45b6-8b9a-6dc7219bf679/${zap.id}`
                         }
                       />
                     </TableCell>
