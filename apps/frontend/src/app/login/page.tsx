@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -59,22 +60,23 @@ const Login = () => {
       updateUserDetails(userId, accessToken);
       signinForm.reset();
 
+      // Show success toast
+      toast.success("Successfully signed in!");
+
       // Then handle navigation
       if (verify === false) {
-        console.log("User not verified, redirecting to verify page");
         router.push(`/verify/${userId}`);
       } else {
-        console.log("User is verified, proceeding with normal flow");
         const redirectTo = searchParams.get("redirect");
-        console.log("Redirecting after login:", redirectTo || "/dashboard");
         router.push(redirectTo || "/dashboard");
       }
     } catch (error) {
       if (error instanceof AxiosError) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred during login";
         console.error("Login error:", error);
-        setError(
-          error.response?.data?.message || "An error occurred during login"
-        );
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } finally {
       setLoading(false);
@@ -203,7 +205,11 @@ const Login = () => {
 };
 
 const LoginPage = () => {
-  return <Login />;
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <Login />
+    </Suspense>
+  );
 };
 
 export default LoginPage;

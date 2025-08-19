@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const Signup = () => {
   const router = useRouter();
@@ -45,9 +47,17 @@ const Signup = () => {
       });
 
       signupForm.reset();
+      toast.success("Account created successfully! Please sign in.");
       router.push("/login");
     } catch (error) {
-      console.log("Error while creating the user = ", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message || "An error occurred while creating your account";
+        console.error("Signup error:", error);
+        toast.error(errorMessage);
+      } else {
+        console.error("Error while creating the user:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

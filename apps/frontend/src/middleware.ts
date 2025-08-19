@@ -17,8 +17,6 @@ export function middleware(request: NextRequest) {
       const parsedUserData = JSON.parse(userData);
       // The cookie stores data directly without the state wrapper
       isAuthenticated = !!(parsedUserData.userId && parsedUserData.accessToken);
-      console.log("HIIII", parsedUserData);
-
     }
   } catch (error) {
     console.error('Error parsing userData cookie:', error);
