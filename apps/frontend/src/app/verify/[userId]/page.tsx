@@ -22,6 +22,8 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { otpFormSchema } from "@repo/zod-schemas";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const OtpVerification = () => {
   const params = useParams();
@@ -46,9 +48,17 @@ const OtpVerification = () => {
       });
 
       form.reset();
+      toast.success("Email verified successfully! Redirecting to dashboard...");
       router.push("/dashboard");
     } catch (error) {
-      console.log("Error while verifying the user = ", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message || "Failed to verify OTP. Please try again.";
+        console.error("OTP verification error:", error);
+        toast.error(errorMessage);
+      } else {
+        console.error("Error while verifying the user:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,8 +69,16 @@ const OtpVerification = () => {
       setLoading(true);
       form.reset();
       const res = await axiosInstance.post(`api/v1/user/re-generate-otp`);
+      toast.success("New OTP has been sent to your email!");
     } catch (error) {
-      console.log("Error while resending the otp = ", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message || "Failed to resend OTP. Please try again.";
+        console.error("Resend OTP error:", error);
+        toast.error(errorMessage);
+      } else {
+        console.error("Error while resending the OTP:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

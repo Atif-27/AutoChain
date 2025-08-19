@@ -4,8 +4,8 @@ import ActionNode from "@/components/ReactFlow/ActionNode";
 import { initialEdges, initialNodes } from "@/components/ReactFlow/constants";
 // import TriggerNode from "@/components/React-Flow/TriggerNode";
 import { Button } from "@/components/ui/button";
-// import { ToastAction } from "@/components/ui/toast";
-// import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 import axiosInstance from "@/utils/axiosInstance";
 
 import { useRouter } from "next/navigation";
@@ -56,30 +56,53 @@ const CreateNewZap = () => {
 
       console.log(body);
 
+      // Validate that all actions have required data
+      const missingActionDetails = nodes.slice(1).findIndex((action, index) => {
+        return !action.data.actionId || !action.data.metadata;
+      });
+
+      if (missingActionDetails !== -1) {
+        toast.error(`Action ${missingActionDetails + 1} is missing required details. Please configure all actions.`);
+        return;
+      }
+
       await axiosInstance.post("/api/v1/zap", body);
-
-      console.log("Success");
-
+      toast.success("Zap published successfully! Redirecting to dashboard...");
       router.push("/dashboard");
     } catch (error) {
-      console.log("Something went wrong", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message || "Failed to publish Zap. Please try again.";
+        console.error("Publish Zap error:", error);
+        toast.error(errorMessage);
+      } else {
+        console.error("Error while publishing Zap:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   const addNode = async () => {
-    setNodes((prevNodes) => [
-      ...prevNodes,
-      {
-        id: (prevNodes.length + 1).toString(),
-        position: {
-          x: prevNodes[prevNodes.length - 1].position.x,
-          y: prevNodes[prevNodes.length - 1].position.y + 200,
+    try {
+      setNodes((prevNodes) => [
+        ...prevNodes,
+        {
+          id: (prevNodes.length + 1).toString(),
+          position: {
+            x: prevNodes[prevNodes.length - 1].position.x,
+            y: prevNodes[prevNodes.length - 1].position.y + 200,
+          },
+          data: { actionId: "", actionName: "", actionImg: "", metadata: "" },
+          type: "action",
         },
-        data: { actionId: "", actionName: "", actionImg: "", metadata: "" },
-        type: "action",
-      },
-    ]);
-    setClicked((prev) => prev + 1);
+      ]);
+      setClicked((prev) => prev + 1);
+      toast.info("New action node added. Configure it to proceed.", {
+        description: "Click on the node to set up the action details."
+      });
+    } catch (error) {
+      console.error("Error adding node:", error);
+      toast.error("Failed to add new node. Please try again.");
+    }
   };
 
   const addEdge = async () => {
