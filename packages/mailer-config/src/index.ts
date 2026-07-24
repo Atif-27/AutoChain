@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { generateOtpTemplate } from "./template/otp-template";
 import { generateNormalEmailTemplate } from "./template/normal-email-template";
+import { info } from "console";
 
 dotenv.config();
 
@@ -31,12 +32,22 @@ async function sendEmail(
             type === "otp"
                 ? generateOtpTemplate(body)
                 : generateNormalEmailTemplate(body);
-
-        const info = await transporter.sendMail({
+        const mailData = {
             from: `"Atif" <${process.env.EMAIL_USER}>`,
             to,
             subject: "AutoChain",
             html,
+        };
+
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(mailData, (err, info) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(info);
+                }
+            });
         });
 
         console.log("Email sent:", info.messageId);
