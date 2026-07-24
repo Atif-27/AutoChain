@@ -40,7 +40,7 @@ async function sendEmail(
         };
 
         await new Promise((resolve, reject) => {
-            transporter.sendMail(mailData, (err, info) => {
+            transporter.sendMail(mailData, (err: any, info: any) => {
                 if (err) {
                     console.error(err);
                     reject(err);
