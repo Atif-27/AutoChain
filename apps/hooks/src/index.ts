@@ -1,15 +1,20 @@
+import axios from "axios";
 import { prisma } from "./lib/prisma";
 import express from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
+const worker_api = process.env.WORKER_API;
+const processor_api = process.env.PROCESSOR_API;
+
 app.use(express.json());
 app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     const userId = req.params.userId;
     const zapId = req.params.zapId;
     const body = req.body;
     console.log(body);
-
+    worker_api && await axios.get(worker_api);
+    processor_api && await axios.get(processor_api);
     await prisma.$transaction(async tx => {
         const run = await tx.zapRun.create({
             data: {

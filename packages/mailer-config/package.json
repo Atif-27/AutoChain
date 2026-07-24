@@ -7,7 +7,8 @@
   "dependencies": {
     "@types/node": "^24.1.0",
     "dotenv": "^17.2.1",
-    "nodemailer": "^7.0.5",
+    "nodemailer": "^7.x.x",
+    "@types/nodemailer": "^7.x.x",
     "resend": "^4.7.0"
   },
   "exports": {
