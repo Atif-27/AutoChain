@@ -11,10 +11,13 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    service: "gmail", // or 'hotmail', 'yahoo', etc., depending on your email
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    family: 4, // force IPv4
     auth: {
-        user: process.env.EMAIL_USER, // your email address
-        pass: process.env.EMAIL_PASS, // your app password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 
