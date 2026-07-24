@@ -50,7 +50,7 @@ async function sendEmail(
             });
         });
 
-        console.log("Email sent:", info.messageId);
+        console.log("Email sent:");
     } catch (error) {
         console.error("Error while sending email:", error);
     }
