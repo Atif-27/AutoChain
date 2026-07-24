@@ -13,6 +13,9 @@
         ".next/**",
         "dist/**",
         "!.next/cache/**"
+      ],
+      "env": [
+        "OPENAI_API_KEY"
       ]
     },
     "lint": {
