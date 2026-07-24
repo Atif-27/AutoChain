@@ -16,8 +16,10 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     const zapId = req.params.zapId;
     const body = req.body;
     console.log(body);
-    worker_api && await axios.get(worker_api);
-    processor_api && await axios.get(processor_api);
+    Promise.allSettled([
+        worker_api ? axios.get(worker_api) : null,
+        processor_api ? axios.get(processor_api) : null
+    ]);
     await prisma.$transaction(async tx => {
         const run = await tx.zapRun.create({
             data: {
