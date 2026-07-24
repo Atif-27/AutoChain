@@ -24,7 +24,7 @@ async function main() {
                 amount: { type: "number", required: true },
             }),
         }, {
-            id: "email",
+            id: "gmail",
             name: "Send Email",
             image:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4nd82eFk5SaBPRIeCpmwL7A4YSokA-kXSmw&s",

@@ -53,7 +53,7 @@ export function generateNormalEmailTemplate(body: string) {
   <div class="email-container">
     <!-- Email Header -->
     <div class="email-header">
-      <h1>Message from Zapier Clone</h1>
+      <h1>Message from AutoChain</h1>
     </div>
 
     <!-- Email Body -->
@@ -65,7 +65,7 @@ export function generateNormalEmailTemplate(body: string) {
 
     <!-- Email Footer -->
     <div class="email-footer">
-      <p>&copy; 2025 Zapier Clone. All rights reserved.</p>
+      <p>&copy; 2025 AutoChain. All rights reserved.</p>
     </div>
   </div>
 </body>

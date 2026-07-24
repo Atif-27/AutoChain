@@ -32,7 +32,7 @@ async function sendEmail(
         const info = await transporter.sendMail({
             from: `"Atif" <${process.env.EMAIL_USER}>`,
             to,
-            subject: "Zapier",
+            subject: "AutoChain",
             html,
         });
 

@@ -58,7 +58,7 @@ export function generateOtpTemplate(otp: string) {
           <span class="otp">${otp}</span>
           <p>If you did not request this code, please ignore this email.</p>
           <div class="footer">
-            &copy; 2025 Zapier. All rights reserved.
+            &copy; 2025 AutoChain. All rights reserved.
           </div>
         </div>
       </body>
